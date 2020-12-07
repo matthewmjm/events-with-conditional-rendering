@@ -1,25 +1,41 @@
-import logo from './logo.svg';
+import { Component } from 'react';
+import TvShowsSection from './components/TvShowsSection'
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const tvShowsURL = "http://api.tvmaze.com/shows"
+
+class App extends Component {
+
+  state= {
+    tvShows: [],
+    isClicked: false
+  }
+
+  componentDidMount(){
+    this.getTvShows()
+  }
+
+  getTvShows = () => {
+    fetch(tvShowsURL)
+      .then(response => response.json())
+      .then(tvShows => this.setState({ tvShows: tvShows }))
+  }
+
+  handleClick = () => {
+    this.setState({isClicked: true})
+  }
+
+  render(){
+    return (
+      <div className="App">
+        <h1>TV Shows!</h1>
+        {this.state.isClicked
+          ? <TvShowsSection tvShows={this.state.tvShows} />
+          : <button onClick={this.handleClick}>Get Shows!</button>
+        }
+      </div>
+    );
+  }
 }
 
 export default App;
